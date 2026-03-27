@@ -1,5 +1,17 @@
 package com.back.domain.post.post.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsInRelativeOrder;
+import static org.hamcrest.Matchers.matchesPattern;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.repository.PostRepository;
 import com.back.domain.post.post.service.PostService;
@@ -13,13 +25,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsInRelativeOrder;
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -51,7 +56,9 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$[0].createDate").exists())
                 .andExpect(jsonPath("$[0].modifyDate").exists())
                 .andExpect(jsonPath("$[0].title").value("제목3"))
-                .andExpect(jsonPath("$[0].content").value("내용3"));
+                .andExpect(jsonPath("$[0].content").value("내용3"))
+                .andExpect(jsonPath("$[0].authorId").value(4))
+                .andExpect(jsonPath("$[0].authorName").value("유저2"));
     }
 
     @Test
@@ -71,7 +78,9 @@ public class ApiV1PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.title").value("제목1"))
-                .andExpect(jsonPath("$.content").value("내용1"));
+                .andExpect(jsonPath("$.content").value("내용1"))
+                .andExpect(jsonPath("$.authorId").value(3))
+                .andExpect(jsonPath("$.authorName").value("유저1"));
 
 
         Post post = postRepository.findById(targetId).get();

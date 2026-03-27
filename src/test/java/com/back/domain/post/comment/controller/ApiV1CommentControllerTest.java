@@ -1,5 +1,16 @@
 package com.back.domain.post.comment.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsInRelativeOrder;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.back.domain.post.comment.entity.Comment;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.repository.PostRepository;
@@ -13,12 +24,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsInRelativeOrder;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -55,7 +60,9 @@ public class ApiV1CommentControllerTest {
                 .andExpect(jsonPath("$[0].id").value(3))
                 .andExpect(jsonPath("$[0].createDate").exists())
                 .andExpect(jsonPath("$[0].modifyDate").exists())
-                .andExpect(jsonPath("$[0].content").value("댓글 1-3"));
+                .andExpect(jsonPath("$[0].content").value("댓글 1-3"))
+                .andExpect(jsonPath("$[0].authorId").value(3))
+                .andExpect(jsonPath("$[0].authorName").value("유저1"));
 
     }
 
@@ -79,7 +86,9 @@ public class ApiV1CommentControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.createDate").exists())
                 .andExpect(jsonPath("$.modifyDate").exists())
-                .andExpect(jsonPath("$.content").value("댓글 1-1"));
+                .andExpect(jsonPath("$.content").value("댓글 1-1"))
+                .andExpect(jsonPath("$.authorId").value(3))
+                .andExpect(jsonPath("$.authorName").value("유저1"));
     }
 
     @Test
