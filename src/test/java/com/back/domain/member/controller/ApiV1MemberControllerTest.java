@@ -1,5 +1,6 @@
 package com.back.domain.member.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -9,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.back.domain.member.entity.Member;
 import com.back.domain.member.repository.MemberRepository;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +130,15 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("200-1"))
                 .andExpect(jsonPath("$.msg").value("%s님 환영합니다.".formatted(member.getNickname())))
                 .andExpect(jsonPath("$.data.apiKey").exists());
+
+        resultActions.andExpect(
+                result -> {
+                    Cookie apiKeyCookie = result.getResponse().getCookie("apiKey");
+
+                    assertThat(apiKeyCookie).isNotNull();
+                    assertThat(apiKeyCookie.getValue()).isNotBlank();
+                }
+        );
     }
 
     @Test
