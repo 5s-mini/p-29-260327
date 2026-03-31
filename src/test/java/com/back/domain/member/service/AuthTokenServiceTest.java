@@ -2,6 +2,7 @@ package com.back.domain.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.back.standard.ut.Ut;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +23,9 @@ public class AuthTokenServiceTest {
 
     @Autowired
     private AuthTokenService authTokenService;
+
+    private String secretPattern = "abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890";
+    private long expireSeconds = 1000L * 60 * 60 * 24 * 365; // 1년
 
     @Test
     void t1() {
@@ -47,6 +51,20 @@ public class AuthTokenServiceTest {
                 .expiration(expiration) // 만료날짜
                 .signWith(secretKey) // 키 서명
                 .compact();
+
+        assertThat(jwt).isNotBlank();
+
+        System.out.println("jwt = " + jwt);
+    }
+
+    @Test
+    @DisplayName("Ut.jwt.toString 를 통해서 JWT 생성, {name=\"Paul\", age=23}")
+    void t3() {
+        String jwt = Ut.jwt.toString(
+                secretPattern,
+                expireSeconds,
+                Map.of("name", "Paul", "age", 23)
+        );
 
         assertThat(jwt).isNotBlank();
 
