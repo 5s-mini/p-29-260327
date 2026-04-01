@@ -39,7 +39,7 @@ public class AuthTokenServiceTest {
         Map<String, Object> payload = Map.of("name", "Paul", "age", 23);
 
         String jwt = Ut.jwt.toString(secretPattern, expireSeconds, payload);
-        Map<String, Object> parsedPayload = Ut.jwt.payload(jwt, secretPattern);
+        Map<String, Object> parsedPayload = Ut.jwt.payloadOrNull(jwt, secretPattern);
 
         assertThat(parsedPayload)
                 .containsAllEntriesOf(payload);
@@ -74,7 +74,15 @@ public class AuthTokenServiceTest {
         String accessToken = authTokenService.genAccessToken(member1);
         assertThat(accessToken).isNotBlank();
 
-        System.out.println("accessToken = " + accessToken);
+        Map<String, Object> payload = authTokenService.payloadOrNull(accessToken);
 
+        assertThat(payload).containsAllEntriesOf(
+                Map.of(
+                        "id", member1.getId(),
+                        "name", member1.getName()
+                )
+        );
+
+        System.out.println("accessToken = " + accessToken);
     }
 }
