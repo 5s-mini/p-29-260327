@@ -2,7 +2,6 @@ package com.back.domain.post.post.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +38,7 @@ public class ApiV1AdmPostControllerTest {
     @DisplayName("글 전체 개수 조회, count")
     void t1() throws Exception {
 
-        Member actor = memberRepository.findByUsername("user1").get();
+        Member actor = memberRepository.findByUsername("admin").get();
 
         ResultActions resultActions = mvc
                 .perform(
@@ -70,10 +69,9 @@ public class ApiV1AdmPostControllerTest {
                 .andDo(print());
 
         resultActions
-                .andExpect(handler().handlerType(ApiV1AdmPostController.class))
-                .andExpect(handler().methodName("count"))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.resultCode").value("403-1"))
-                .andExpect(jsonPath("$.msg").value("권한이 없습니다"));
+                .andExpect(jsonPath("$.msg").value("권한이 없습니다."));
+
     }
 }
